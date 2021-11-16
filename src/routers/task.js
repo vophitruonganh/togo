@@ -1,21 +1,22 @@
 const context = require('../commons/context.js');
 
 const Router = require('express').Router();
-const authUtils = require('../ultils/auth.js');
-const {JSON_WEB_TOKEN, HTTP_STATUS_CODE} = require("../commons/constants.js");
+const taskUtils = require('../ultils/task.js');
+const {HTTP_STATUS_CODE} = require("../commons/constants.js");
+const authorization = require('../middlewares/auththorize.js');
 
-Router.post('/login', async (req, res) => {
-	const loginInfo = {
-		username: context.getBody(req, 'username'),
-		password: context.getBody(req, 'password'),
-	};
+Router.post('/task/add', authorization, async (req, res) => {
+	const taskInfo = context.getBody(req);
+	const userId = context.getUserId(req);
 
-	const isLogin = await authUtils.login(loginInfo);
+	const isLimitTask = await taskUtils.checkLimitQuota(userId);
 
-	if (isLogin)
-		return res.send({token: authUtils.createJWTToken(loginInfo), ttl: JSON_WEB_TOKEN.TTL});
+	if (isLimitTask)
+		return res.status(HTTP_STATUS_CODE.BAD_REQUEST).send({message: 'Limit quota add task today'});
 
-	return res.status(HTTP_STATUS_CODE.UNAUTHORIZATION).send(`LOGIN FAILED`);
+	await taskUtils.addTask(userId, taskInfo);
+
+	res.send({message: 'Add task success', taskInfo});
 });
 
 module.exports = Router;
