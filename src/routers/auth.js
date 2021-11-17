@@ -2,7 +2,7 @@ const context = require('../commons/context.js');
 
 const Router = require('express').Router();
 const authUtils = require('../ultils/auth.js');
-const {JSON_WEB_TOKEN, HTTP_STATUS_CODE} = require("../commons/constants.js");
+const {HTTP_STATUS_CODE} = require("../commons/constants.js");
 
 
 Router.post('/login', async (req, res) => {
@@ -11,10 +11,10 @@ Router.post('/login', async (req, res) => {
 		password: context.getBody(req, 'password'),
 	};
 
-	const isLogin = await authUtils.login(loginInfo);
+	const userInfo = await authUtils.login(loginInfo);
 
-	if (isLogin)
-		return res.send({token: authUtils.createJWTToken(loginInfo), ttl: JSON_WEB_TOKEN.TTL});
+	if (userInfo)
+		return res.send({data: authUtils.signJWTToken(userInfo)});
 
 	return res.status(HTTP_STATUS_CODE.UNAUTHORIZATION).send(`LOGIN FAILED`);
 });

@@ -7,8 +7,8 @@ module.exports = (req, res, next) => {
 	try {
 		req.userInfo = authUtils.verifyJWTToken(token);
 	} catch (error) {
-		console.log(error);
-		return res.status(401).send({message: 'Invalid token'});
+		console.error(`Validate token: `, error.message);
+		return res.status(401).send({message: 'PERMISSION DENIED'});
 	}
 
 	next();

@@ -1,23 +1,31 @@
 const jwt = require('jsonwebtoken');
 const {JSON_WEB_TOKEN} = require("../commons/constants.js");
+const {encrypt, decrypt} = require("../commons/crypto.js");
 /**
  *
  * @param payload
  * @returns {string}
  */
-const createJWTToken = (payload) => {
-	const nowToSecond = new Date().getTime() / 1000;
-	return jwt.sign({ext: nowToSecond + JSON_WEB_TOKEN.TTL, data: payload}, JSON_WEB_TOKEN.SECRET_KEY);
+const signJWTToken = (payload) => {
+	const data = encrypt(JSON.stringify(payload));
+	return {
+		token: jwt.sign({data: data}, JSON_WEB_TOKEN.SECRET_KEY, {expiresIn: JSON_WEB_TOKEN.TTL}),
+		ttl: JSON_WEB_TOKEN.TTL
+	};
 };
 
 /**
  *
  * @param token
- * @returns boolean
+ * @returns {*}
  */
 const verifyJWTToken = (token) => {
-	return !token ? false : jwt.verify(token, JSON_WEB_TOKEN.SECRET_KEY);
+	const data = jwt.verify(token, JSON_WEB_TOKEN.SECRET_KEY)?.data;
+
+	const decodeData = decrypt(data);
+	return decodeData ? JSON.parse(decodeData) : decodeData;
 };
+
 
 /**
  *
@@ -26,11 +34,11 @@ const verifyJWTToken = (token) => {
  */
 const login = async (loginInfo) => {
 	// TODO: check login info with database, return true/false
-	return true;
+	return {...{userId: '1111'}, ...loginInfo};
 };
 
 module.exports = {
-	createJWTToken: createJWTToken,
+	signJWTToken: signJWTToken,
 	verifyJWTToken: verifyJWTToken,
 	login: login
 };
