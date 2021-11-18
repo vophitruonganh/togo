@@ -1,7 +1,7 @@
 const APPLICATION_PORT = parseInt(process.env.APPLICATION_PORT);
 const CRYPTO_SEED = process.env.CRYPTO_SEED;
 const CIPHER_IV = process.env.CIPHER_IV;
-const SALT_HASH_PASSWORD = process.env.SALT_HASH_PASSWORD;
+const SALT_HASH_PASSWORD = process.env.SALT_HASH_PASSWORD || '$2b$10$PW/PViLhaCi0198vKfXU/e';
 const JSON_WEB_TOKEN = {
 	CRYPTO_SEED: CRYPTO_SEED,
 	CIPHER_IV: CIPHER_IV,
