@@ -1,16 +1,14 @@
 const context = require('../commons/context.js');
-const {ADD_TASK_SUCCESS} = require('../commons/constants.js');
-
 const Router = require('express').Router();
 const taskUtils = require('../ultils/task.js');
 const authentication = require('../middlewares/authentication.js');
 
 Router.get('/tasks', authentication, async (req, res) => {
-	try {
-		const createdDate = context.getQuery(req, 'created_date');
-		const page = context.getQuery(req, 'page');
-		const limit = context.getQuery(req, 'limit');
+	const createdDate = context.getQuery(req, 'created_date');
+	const page = context.getQuery(req, 'page');
+	const limit = context.getQuery(req, 'limit');
 
+	try {
 		const conditions = {createdDate: new Date(createdDate)};
 		const tasks = await taskUtils.getTask(conditions, page, limit);
 		return res.send({data: tasks});

@@ -20,21 +20,37 @@ const generateKeyRateLimitTask = () => {
 /**
  *
  * @param userId
+ * @return {*}
+ */
+const getTotalTimesAddTask = async (userId) => {
+	return hGet(generateKeyRateLimitTask(), userId);
+};
+
+/**
+ *
+ * @param userId
  * @return Promise<boolean>
  */
 const checkLimitQuotaAddTask = async (userId) => {
-	return 4 < await hGet(generateKeyRateLimitTask(), userId);
+	const quotaAddTask = (TASK_RATE_LIMIT.QUOTA - 1);
+	return quotaAddTask < await getTotalTimesAddTask(userId);
 };
 
+/**
+ *
+ * @param userId
+ * @return {Promise<*>}
+ */
 const incrQuotaAddTaskToday = async (userId) => {
 	const key = generateKeyRateLimitTask();
+
 	const isExisted = await hExists(key, userId);
 
 	if (!isExisted) {
 		await hSet(key, userId, TASK_RATE_LIMIT.INCREMENT);
 		await setExpire(key, TASK_RATE_LIMIT.EXPIRED_TIME);
 	} else {
-		return hIncrBy(key, userId, TASK_RATE_LIMIT.INCREMENT);
+		await hIncrBy(key, userId, TASK_RATE_LIMIT.INCREMENT);
 	}
 };
 
@@ -44,10 +60,10 @@ const incrQuotaAddTaskToday = async (userId) => {
  * @param taskInfo
  */
 const addTask = async (userId, taskInfo) => {
-	if (!userId) throw new Error(`Invalid user info`);
+	if (!userId) return Promise.reject(`Invalid user info`);
 
 	const isLimitTask = await checkLimitQuotaAddTask(userId);
-	if (isLimitTask) throw new Error('Limit quota add task today');
+	if (isLimitTask) return Promise.reject(`Limit quota add task today`);
 
 	await Task.create({content: taskInfo, userId: userId, createdDate: new Date()});
 
@@ -66,11 +82,11 @@ const getTask = async (conditions, page = 1, limit = 50) => {
 			limit: limit,
 			offset: page - 1
 		}
-	);
+	).catch(error => error);
 };
 
 module.exports = {
-	checkLimitQuota: checkLimitQuota,
+	checkLimitQuotaAddTask: checkLimitQuotaAddTask,
 	addTask: addTask,
 	getTask: getTask,
 };
