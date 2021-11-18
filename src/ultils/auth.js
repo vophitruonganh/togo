@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const {JSON_WEB_TOKEN} = require("../commons/constants.js");
 const {encrypt, decrypt} = require("../commons/crypto.js");
+const {User} = require('../providers/postgres');
+
 /**
  *
  * @param payload
@@ -29,12 +31,12 @@ const verifyJWTToken = (token) => {
 
 /**
  *
- * @param loginInfo
- * @return Promise<boolean>
+ * @param conditions
+ * @return Promise<[]>
  */
-const login = async (loginInfo) => {
-	// TODO: check login info with database, return true/false
-	return {...{userId: '1111'}, ...loginInfo};
+const login = async (conditions) => {
+	const data = await User.findOne({where: conditions});
+	return [!!data, data];
 };
 
 module.exports = {

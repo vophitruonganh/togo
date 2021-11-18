@@ -3,8 +3,8 @@ const {Sequelize, Model, DataTypes, Deferrable} = require("sequelize");
 const connectionString = `postgres://${Index.USERNAME}:${Index.PASSWORD}@${Index.HOST}:${Index.PORT}/${Index.DATABASE_NAME}`;
 const sequelize = new Sequelize(connectionString);
 
-const User = sequelize.define("tasks", {
-	username: {
+const User = sequelize.define("users", {
+	userId: {
 		type: DataTypes.STRING,
 		allowNull: false
 	},
@@ -18,7 +18,7 @@ const User = sequelize.define("tasks", {
 	}
 }, {
 	id: {type: DataTypes.STRING, primaryKey: true},
-	username: {type: DataTypes.STRING, unique: true},
+	userId: {type: DataTypes.STRING, unique: true},
 	// Other model options go here
 	sequelize, // We need to pass the connection instance
 	modelName: 'Users', // We need to choose the model name
