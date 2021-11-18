@@ -56,9 +56,13 @@ const addTask = async (userId, taskInfo) => {
  * @return {Promise<*[]>}
  */
 const getTask = async (conditions, page = 1, limit = 50) => {
-	const start = (page - 1) * limit;
-	const end = start + limit;
-	return Task.findAll({where: {createdAt: {[Op.gt]: conditions.createdDate}}, limit: limit, offset: page - 1});
+	return Task.findAll(
+		{
+			where: {createdAt: {[Op.gt]: conditions.createdDate}},
+			limit: limit,
+			offset: page - 1
+		}
+	);
 };
 
 module.exports = {

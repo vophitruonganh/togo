@@ -17,4 +17,17 @@ Router.get('/login', async (req, res) => {
 	return res.status(HTTP_STATUS_CODE.UNAUTHORIZATION).send({message: `LOGIN FAILED`});
 });
 
+Router.post('/register', async (req, res) => {
+	const loginInfo = {
+		userId: context.getBody(req, 'user_id'),
+		password: context.getBody(req, 'password'),
+	};
+
+	const [isLogin, userInfo] = await authUtils.register(loginInfo);
+
+	if (isLogin) return res.send({data: authUtils.signJWTToken(userInfo)});
+
+	return res.status(HTTP_STATUS_CODE.UNAUTHORIZATION).send({message: `LOGIN FAILED`});
+});
+
 module.exports = Router;

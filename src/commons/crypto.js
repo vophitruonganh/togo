@@ -1,8 +1,8 @@
-const {CRYPTO_SEED, CIPHER_IV} = require('./constants.js');
+const {CRYPTO_SEED, CIPHER_IV, SALT_HASH_PASSWORD} = require('./constants.js');
 const crypto = require('crypto');
 const algorithm = 'aes-256-cbc';
+const bcrypt = require('bcrypt');
 
-// Format crypto seed is hex string for encrypt and decrypt message, total bytes should be 32
 const key = Buffer.from(CRYPTO_SEED, 'hex');
 
 // Format cipher iv is hex string that used for encrypt and decrypt message, total bytes should be 16
@@ -33,8 +33,33 @@ const decrypt = (encryptedData) => {
 	return cipher.update(encryptedData, hex, utf8) + cipher.final(utf8);
 };
 
+/**
+ *
+ * @param password
+ * @return {Promise<unknown>}
+ */
+const cryptPassword = (password) => {
+	return new Promise((resolve, reject) => {
+		bcrypt.hash(password, SALT_HASH_PASSWORD, (error2, hash) => {
+			if (error2) return reject(error2);
+			return resolve(hash);
+		});
+	});
+};
+
+const comparePassword = function (plainPass, callback) {
+	return new Promise((resolve, reject) => {
+		bcrypt.compare(plainPass, SALT_HASH_PASSWORD, function (err, isPasswordMatch) {
+			if (err) return reject(err);
+			return resolve(isPasswordMatch);
+		});
+	});
+};
+
 module.exports = {
 	encrypt: encrypt,
-	decrypt: decrypt
+	decrypt: decrypt,
+	cryptPassword: cryptPassword,
+	comparePassword: comparePassword
 };
 

@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const {JSON_WEB_TOKEN} = require("../commons/constants.js");
-const {encrypt, decrypt} = require("../commons/crypto.js");
+const {encrypt, decrypt, cryptPassword} = require("../commons/crypto.js");
 const {User} = require('../providers/postgres');
 
 /**
@@ -35,12 +35,32 @@ const verifyJWTToken = (token) => {
  * @return Promise<[]>
  */
 const login = async (conditions) => {
-	const data = await User.findOne({where: conditions});
+	if (!conditions) throw new Error(`Conditions is not empty`);
+	const where = {userId: conditions.userId, password: await cryptPassword(conditions.password)};
+	const data = await User.findOne({where: where});
+	return [!!data, data];
+};
+
+/**
+ *
+ * @param conditions
+ * @return Promise<[]>
+ */
+const register = async (conditions) => {
+	if (!conditions) throw new Error(`Conditions is not empty`);
+
+	const data = await User.create({
+		userId: conditions.userId,
+		password: await cryptPassword(conditions.password),
+		createdDate: new Date()
+	});
+
 	return [!!data, data];
 };
 
 module.exports = {
 	signJWTToken: signJWTToken,
 	verifyJWTToken: verifyJWTToken,
-	login: login
+	login: login,
+	register: register,
 };
