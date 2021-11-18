@@ -33,8 +33,10 @@ Router.post('/register', async (req, res) => {
 
 		validateParamAuth(registerInfo);
 
-		const [isLogin, userInfo] = await authUtils.register(registerInfo);
+		const isExistedAccount = await authUtils.checkExistsAccount(registerInfo);
+		if (isExistedAccount) return res.status(401).send({message: 'Account invalid'});
 
+		const [isLogin, userInfo] = await authUtils.register(registerInfo);
 		if (isLogin) return res.send({data: authUtils.signJWTToken(userInfo)});
 
 		return res.status(HTTP_STATUS_CODE.UNAUTHORIZATION).send({message: `LOGIN FAILED`});

@@ -63,7 +63,7 @@ const addTask = async (userId, taskInfo) => {
 	if (!userId) return Promise.reject(`Invalid user info`);
 
 	const isLimitTask = await checkLimitQuotaAddTask(userId);
-	if (isLimitTask) return Promise.reject(`Limit quota add task today`);
+	if (isLimitTask) throw new Error(`Limit quota add task today`);
 
 	await Task.create({content: taskInfo, userId: userId, createdDate: new Date()});
 

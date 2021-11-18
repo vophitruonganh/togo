@@ -1,7 +1,9 @@
 const {POSTGRES} = require('../../commons/constants.js');
 const {Sequelize, DataTypes, Deferrable} = require("sequelize");
 const connectionString = `postgres://${POSTGRES.USERNAME}:${POSTGRES.PASSWORD}@${POSTGRES.HOST}:${POSTGRES.PORT}/${POSTGRES.DATABASE_NAME}`;
-const sequelize = new Sequelize(connectionString);
+const sequelize = new Sequelize(connectionString, {
+	logging: false
+});
 
 const User = sequelize.define("users", {
 	userId: {
@@ -18,7 +20,9 @@ const User = sequelize.define("users", {
 	}
 }, {
 	id: {type: DataTypes.STRING, primaryKey: true},
-	userId: {type: DataTypes.STRING, unique: true},
+	indexes: [
+		{unique: true, fields: ['user_id']},
+	],
 	sequelize,
 	modelName: 'Users',
 	underscored: true
@@ -40,22 +44,14 @@ const Task = sequelize.define("tasks", {
 }, {
 	sequelize,
 	modelName: 'Tasks',
-	user_id: {
-		type: DataTypes.STRING,
-		references: {
-			model: User,
-			key: 'id',
-			deferrable: Deferrable.INITIALLY_IMMEDIATE
-		}
-	},
 	underscored: true
 });
 
-/*(async () => {
+(async () => {
 	await sequelize.authenticate();
+	await sequelize.sync({alter: true, force: false});
+})();
 
-	await sequelize.sync({ force: true });
-})();*/
 module.exports = {
 	Task: Task,
 	User: User,

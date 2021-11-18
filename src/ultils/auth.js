@@ -31,6 +31,16 @@ const verifyJWTToken = (token) => {
 	return decodeData ? JSON.parse(decodeData) : decodeData;
 };
 
+/**
+ *
+ * @param conditions
+ * @return {Promise<boolean>}
+ */
+const checkExistsAccount = async (conditions) => {
+	if (!conditions) throw new Error(`Conditions is not empty`);
+	const where = {userId: conditions.userId};
+	return !!(await User.findOne({where: where}));
+};
 
 /**
  *
@@ -67,4 +77,5 @@ module.exports = {
 	login: login,
 	register: register,
 	validateParamAuth: validateParamAuth,
+	checkExistsAccount: checkExistsAccount,
 };
