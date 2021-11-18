@@ -21,14 +21,14 @@ Router.get('/login', async (req, res) => {
 });
 
 Router.post('/register', async (req, res) => {
-	const loginInfo = {
+	const registerInfo = {
 		userId: context.getBody(req, 'user_id'),
 		password: context.getBody(req, 'password'),
 	};
 
-	validateParamAuth(loginInfo);
+	validateParamAuth(registerInfo);
 
-	const [isLogin, userInfo] = await authUtils.register(loginInfo);
+	const [isLogin, userInfo] = await authUtils.register(registerInfo);
 
 	if (isLogin) return res.send({data: authUtils.signJWTToken(userInfo)});
 
