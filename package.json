@@ -4,7 +4,9 @@
   "description": "This is a simple backend for a todo service, right now this service can handle login/list/create simple tasks",
   "main": "src/index.js",
   "scripts": {
-    "start:dev": "nodemon src/index.js",
+    "start:dev": "NODE_ENV=DEVELOP nodemon src/index.js",
+    "start:stg": "NODE_ENV=STAGING node src/index.js",
+    "start:prod": "NODE_ENV=PRODUCTION node src/index.js",
     "test": "jest  --coverage"
   },
   "repository": {
