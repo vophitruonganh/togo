@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "cb9a531b-d122-4e37-b974-3944ad71660d",
+		"name": "Test togo",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"access_token\", jsonData.data.token);",
+							"",
+							"// var urlGetProfiles = pm.variables.get(\"domain_pops_app\") + \"/\" +",
+							"// pm.variables.get(\"api_prefix\") + \"/profiles/getProfiles?access_token=\"+ jsonData.data.id +\"&api-key=\" + pm.variables.get(\"api_key\");",
+							"",
+							"",
+							"// pm.sendRequest(urlGetProfiles, function (err, response) {",
+							"//     var profileData = JSON.parse(response);",
+							"//     for (var i = 0; i < response.data.length; i++){",
+							"//         if(response.data[i].type == 'adult')",
+							"//             pm.environment.set(\"profile_adult\", response.data[i].id);",
+							"//         if(response.data[i].type == 'kids')",
+							"//             pm.environment.set(\"profile_kids\", response.data[i].id);",
+							"// }",
+							"",
+							"// });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/login?user_id=firstUser&password=example",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "firstUser"
+						},
+						{
+							"key": "password",
+							"value": "example"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"access_token\", jsonData.data.token);",
+							"",
+							"// var urlGetProfiles = pm.variables.get(\"domain_pops_app\") + \"/\" +",
+							"// pm.variables.get(\"api_prefix\") + \"/profiles/getProfiles?access_token=\"+ jsonData.data.id +\"&api-key=\" + pm.variables.get(\"api_key\");",
+							"",
+							"",
+							"// pm.sendRequest(urlGetProfiles, function (err, response) {",
+							"//     var profileData = JSON.parse(response);",
+							"//     for (var i = 0; i < response.data.length; i++){",
+							"//         if(response.data[i].type == 'adult')",
+							"//             pm.environment.set(\"profile_adult\", response.data[i].id);",
+							"//         if(response.data[i].type == 'kids')",
+							"//             pm.environment.set(\"profile_kids\", response.data[i].id);",
+							"// }",
+							"",
+							"// });"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "user_id",
+							"value": "test_user_id_1",
+							"type": "text"
+						},
+						{
+							"key": "password",
+							"value": "123456",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{host}}/register",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"register"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "firstUser",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "example",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "List content",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{host}}/tasks?created_date=2020-06-29&page=1&limit=100",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tasks"
+					],
+					"query": [
+						{
+							"key": "created_date",
+							"value": "2020-06-29"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create task",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{access_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"content\": \"another content\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{host}}/tasks",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"tasks"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
