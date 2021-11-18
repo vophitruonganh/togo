@@ -2,6 +2,11 @@ const {hIncrBy, hGet, hExists, hSet, setExpire} = require('../providers/redis.js
 const {TASK_RATE_LIMIT} = require('../commons/constants.js');
 const {Task} = require('../providers/postgres');
 const {Op} = require("sequelize");
+
+/**
+ *
+ * @return {`rate_limit_task:${number}`}
+ */
 const generateKeyRateLimitTask = () => {
 	const date = new Date().getDate();
 	const month = new Date().getMonth();
@@ -15,7 +20,6 @@ const generateKeyRateLimitTask = () => {
 /**
  *
  * @param userId
- * @param taskInfo
  * @return Promise<boolean>
  */
 const checkLimitQuota = async (userId) => {
@@ -58,7 +62,7 @@ const addTask = async (userId, taskInfo) => {
 const getTask = async (conditions, page = 1, limit = 50) => {
 	return Task.findAll(
 		{
-			where: {createdAt: {[Op.gt]: conditions.createdDate}},
+			where: {createdAt: {[Op.gt]: conditions?.createdDate}},
 			limit: limit,
 			offset: page - 1
 		}

@@ -5,7 +5,7 @@
  * @returns {* | null}
  */
 const getParam = (req, field) => {
-	return req.params[field] || null;
+	return req?.params[field] || null;
 };
 
 /**
@@ -15,7 +15,7 @@ const getParam = (req, field) => {
  * @returns {* | null}
  */
 const getQuery = (req, field) => {
-	return req.query[field] || null;
+	return req?.query[field] || null;
 };
 
 /**
@@ -25,7 +25,7 @@ const getQuery = (req, field) => {
  * @returns {* | null}
  */
 const getBody = (req, field = null) => {
-	return field ? req.body[field] : req.body;
+	return field ? req?.body[field] : req?.body;
 };
 
 /**

@@ -3,6 +3,9 @@ const {JSON_WEB_TOKEN} = require("../commons/constants.js");
 const {encrypt, decrypt, cryptPassword} = require("../commons/crypto.js");
 const {User} = require('../providers/postgres');
 
+const validateParamAuth = (params) => {
+	if (!params.userId || !params.password) throw new Error('Params invalid');
+};
 /**
  *
  * @param payload
@@ -63,4 +66,5 @@ module.exports = {
 	verifyJWTToken: verifyJWTToken,
 	login: login,
 	register: register,
+	validateParamAuth: validateParamAuth,
 };

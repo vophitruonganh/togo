@@ -1,4 +1,5 @@
 const context = require('../commons/context.js');
+const {validateParamAuth} = require('../ultils/auth.js');
 
 const Router = require('express').Router();
 const authUtils = require('../ultils/auth.js');
@@ -9,6 +10,8 @@ Router.get('/login', async (req, res) => {
 		userId: context.getQuery(req, 'user_id'),
 		password: context.getQuery(req, 'password'),
 	};
+
+	validateParamAuth(loginInfo);
 
 	const [isLogin, userInfo] = await authUtils.login(loginInfo);
 
@@ -22,6 +25,8 @@ Router.post('/register', async (req, res) => {
 		userId: context.getBody(req, 'user_id'),
 		password: context.getBody(req, 'password'),
 	};
+
+	validateParamAuth(loginInfo);
 
 	const [isLogin, userInfo] = await authUtils.register(loginInfo);
 
