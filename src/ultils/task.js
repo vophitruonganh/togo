@@ -22,7 +22,7 @@ const generateKeyRateLimitTask = () => {
  * @param userId
  * @return Promise<boolean>
  */
-const checkLimitQuota = async (userId) => {
+const checkLimitQuotaAddTask = async (userId) => {
 	return 4 < await hGet(generateKeyRateLimitTask(), userId);
 };
 
@@ -46,7 +46,7 @@ const incrQuotaAddTaskToday = async (userId) => {
 const addTask = async (userId, taskInfo) => {
 	if (!userId) throw new Error(`Invalid user info`);
 
-	const isLimitTask = await checkLimitQuota(userId);
+	const isLimitTask = await checkLimitQuotaAddTask(userId);
 	if (isLimitTask) throw new Error('Limit quota add task today');
 
 	await Task.create({content: taskInfo, userId: userId, createdDate: new Date()});
