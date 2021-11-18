@@ -1,17 +1,32 @@
 const context = require('../commons/context.js');
+const {ADD_TASK_SUCCESS} = require('../commons/constants.js');
 
 const Router = require('express').Router();
 const taskUtils = require('../ultils/task.js');
-const {HTTP_STATUS_CODE} = require("../commons/constants.js");
 const authentication = require('../middlewares/authentication.js');
 
-Router.post('/task/add', authentication, async (req, res) => {
+Router.get('/tasks', authentication, async (req, res) => {
+	try {
+		const createdDate = context.getQuery(req, 'created_date');
+		const page = context.getQuery(req, 'page');
+		const limit = context.getQuery(req, 'limit');
+
+		const conditions = {createdDate: new Date(createdDate)};
+		const tasks = await taskUtils.getTask(conditions, page, limit);
+		return res.send({data: tasks});
+
+	} catch (error) {
+		return res.status(400).send({message: error.message});
+	}
+});
+
+Router.post('/tasks', authentication, async (req, res) => {
 	const taskInfo = context.getBody(req);
 	const userId = context.getUserId(req);
 
 	try {
 		await taskUtils.addTask(userId, taskInfo);
-		return res.send({message: 'Add task success', taskInfo});
+		return res.send({data: taskInfo});
 	} catch (error) {
 		return res.status(400).send({message: error.message});
 	}

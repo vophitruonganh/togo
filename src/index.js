@@ -12,6 +12,7 @@ const taskRouter = require('./routers/task.js');
 
 // Include middlewares
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 // Include routers
 app.use(healthCheckRouter);

@@ -1,6 +1,7 @@
 const {hIncrBy, hGet, hExists, hSet, setExpire} = require('../providers/redis.js');
 const {TASK_RATE_LIMIT} = require('../commons/constants.js');
-
+const {Task} = require('../providers/postgres');
+const {Op} = require("sequelize");
 const generateKeyRateLimitTask = () => {
 	const date = new Date().getDate();
 	const month = new Date().getMonth();
@@ -27,7 +28,7 @@ const incrQuotaAddTaskToday = async (userId) => {
 
 	if (!isExisted) {
 		await hSet(key, userId, TASK_RATE_LIMIT.INCREMENT);
-		await setExpire(key, 86400);
+		await setExpire(key, TASK_RATE_LIMIT.EXPIRED_TIME);
 	} else {
 		return hIncrBy(key, userId, TASK_RATE_LIMIT.INCREMENT);
 	}
@@ -39,20 +40,29 @@ const incrQuotaAddTaskToday = async (userId) => {
  * @param taskInfo
  */
 const addTask = async (userId, taskInfo) => {
-	// Validate params input
 	if (!userId) throw new Error(`Invalid user info`);
 
-	// Check limit quota add task today
 	const isLimitTask = await checkLimitQuota(userId);
 	if (isLimitTask) throw new Error('Limit quota add task today');
 
-	// Add data to database
-	// incrQuotaAddTaskToday
+	await Task.create({content: taskInfo, userId: userId, createdDate: new Date()});
+
 	await incrQuotaAddTaskToday(userId);
 	return taskInfo;
 };
 
+/**
+ *
+ * @return {Promise<*[]>}
+ */
+const getTask = async (conditions, page = 1, limit = 50) => {
+	const start = (page - 1) * limit;
+	const end = start + limit;
+	return Task.findAll({where: {createdAt: {[Op.gt]: conditions.createdDate}}, limit: limit, offset: page - 1});
+};
+
 module.exports = {
 	checkLimitQuota: checkLimitQuota,
-	addTask: addTask
+	addTask: addTask,
+	getTask: getTask,
 };

@@ -5,10 +5,10 @@ const authUtils = require('../ultils/auth.js');
 const {HTTP_STATUS_CODE} = require("../commons/constants.js");
 
 
-Router.post('/login', async (req, res) => {
+Router.get('/login', async (req, res) => {
 	const loginInfo = {
-		username: context.getBody(req, 'username'),
-		password: context.getBody(req, 'password'),
+		username: context.getParam(req, 'username'),
+		password: context.getParam(req, 'password'),
 	};
 
 	const userInfo = await authUtils.login(loginInfo);

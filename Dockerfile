@@ -12,6 +12,6 @@ RUN npm install --production
 
 COPY . /app/
 
-EXPOSE 8080
+EXPOSE 5050
 
 CMD ["npm", "run", "start:prod"]
