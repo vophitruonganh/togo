@@ -22,3 +22,5 @@ app.use(taskRouter);
 app.listen(APPLICATION_PORT, '0.0.0.0', () => {
 	console.log(`Service started with port ${APPLICATION_PORT}`);
 });
+
+module.exports = app;

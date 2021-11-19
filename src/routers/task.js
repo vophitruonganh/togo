@@ -5,8 +5,8 @@ const authentication = require('../middlewares/authentication.js');
 
 Router.get('/tasks', authentication, async (req, res) => {
 	const createdDate = context.getQuery(req, 'created_date');
-	const page = context.getQuery(req, 'page');
-	const limit = context.getQuery(req, 'limit');
+	const page = context.getQuery(req, 'page') || 1;
+	const limit = context.getQuery(req, 'limit') || 20;
 
 	try {
 		const conditions = {createdDate: new Date(createdDate)};

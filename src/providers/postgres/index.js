@@ -5,6 +5,12 @@ const sequelize = new Sequelize(connectionString, {
 	logging: false
 });
 
+
+const syncSchema = async () => {
+	await sequelize.authenticate();
+	await sequelize.sync({alter: true, force: false});
+};
+
 const User = sequelize.define("users", {
 	userId: {
 		type: DataTypes.STRING,
@@ -48,11 +54,9 @@ const Task = sequelize.define("tasks", {
 });
 
 (async () => {
-	await sequelize.authenticate();
-	await sequelize.sync({alter: true, force: false});
-})();
-
+	await syncSchema();
+});
 module.exports = {
 	Task: Task,
-	User: User,
+	User: User
 };

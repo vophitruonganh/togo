@@ -7,7 +7,8 @@
     "start:dev": "NODE_ENV=DEVELOP nodemon src/index.js",
     "start:stg": "NODE_ENV=STAGING node src/index.js",
     "start:prod": "NODE_ENV=PRODUCTION node src/index.js",
-    "test": "jest  --coverage"
+    "test": "jest --coverage",
+    "test:cov": "jest --coverage --watch-all"
   },
   "repository": {
     "type": "git",
@@ -31,7 +32,8 @@
     "sequelize": "^6.9.0"
   },
   "devDependencies": {
-    "jest": "^27.3.1"
+    "jest": "^27.3.1",
+    "supertest": "^6.1.6"
   },
   "jest": {
     "collectCoverage": true,
