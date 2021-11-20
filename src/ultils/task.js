@@ -78,9 +78,12 @@ const addTask = async (userId, taskInfo) => {
 const getTask = async (conditions, page = 1, limit = 50) => {
 	return Task.findAll(
 		{
-			where: {createdAt: {[Op.gt]: conditions?.createdDate}},
+			where: {
+				userId: conditions?.userId,
+				createdAt: {[Op.gt]: conditions?.createdDate}
+			},
 			limit: limit,
-			offset: page - 1
+			offset: (page - 1)
 		}
 	).catch(error => error);
 };

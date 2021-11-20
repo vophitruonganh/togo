@@ -7,9 +7,9 @@ Router.get('/tasks', authentication, async (req, res) => {
 	const createdDate = context.getQuery(req, 'created_date');
 	const page = context.getQuery(req, 'page') || 1;
 	const limit = context.getQuery(req, 'limit') || 20;
-
+	const userId = context.getUserId(req);
 	try {
-		const conditions = {createdDate: new Date(createdDate)};
+		const conditions = {userId: userId, createdDate: new Date(createdDate)};
 		const tasks = await taskUtils.getTask(conditions, page, limit);
 		return res.send({data: tasks});
 
