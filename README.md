@@ -45,6 +45,17 @@ npm run start:stag
 # With env production
 npm run start:prod
 ```
+### Testing
+
+Run unittest
+```shell
+npm run test
+```
+
+Run unittest with coverage report
+```shell
+npm run test:cov
+```
 
 ### Deployment
 Before building docker to deploy, need to copy .env for staging/prod to overwrite to .env develop
